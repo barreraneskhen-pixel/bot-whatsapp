@@ -22,7 +22,10 @@ app.post("/webhook", async (req, res) => {
   try {
     const message = req.body.messages?.[0];
 
-    if (!message || message.from_me) return res.sendStatus(200);
+    // 🔥 FIX WHAPI (RESPUESTA INMEDIATA)
+    res.sendStatus(200);
+
+    if (!message || message.from_me) return;
 
     const from = message.chat_id;
     const text = message.text?.body?.toLowerCase() || "";
@@ -133,7 +136,7 @@ Ahora envíame tu DNI para validar cobertura y avanzar con tu instalación`;
 - Después del 21: siguiente mes + proporcional`;
     }
 
-    // EMPUJE FINAL (cliente dudoso)
+    // EMPUJE FINAL
     else {
       respuesta = `👋 Soy asesor de *Perú Fibra* 🚀
 
@@ -149,7 +152,7 @@ Solo envíame:
 y te dejo todo listo hoy mismo`;
     }
 
-    // ENVIAR MENSAJE
+    // ENVÍO A WHAPI
     await fetch("https://gate.whapi.cloud/messages/text", {
       method: "POST",
       headers: {
@@ -162,14 +165,14 @@ y te dejo todo listo hoy mismo`;
       }),
     });
 
-    res.sendStatus(200);
-
   } catch (error) {
     console.log(error);
-    res.sendStatus(500);
   }
 });
 
-app.listen(3000, () => {
+// 🔥 IMPORTANTE PARA RENDER
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
   console.log("Bot vendedor activo 🚀");
 });
